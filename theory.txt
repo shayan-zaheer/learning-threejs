@@ -1,0 +1,4 @@
+How WebGL and ThreeJS works?
+
+ThreeJS basically makes working with WebGL much easier. 
+As per the analogy given by Sheryians Coding School.
