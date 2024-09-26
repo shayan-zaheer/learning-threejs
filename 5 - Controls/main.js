@@ -1,7 +1,9 @@
 import * as THREE from "three"
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, 700/500);
+
 
 camera.position.z = 5;
 
@@ -22,19 +24,22 @@ const cursor = {
 
 const box = new THREE.Mesh(geometry, material);
 
-// box.rotation.x = 0.5;
-
-window.addEventListener("mousemove", event => {
-    cursor.x = event.clientX / sizes.width - 0.5;
-    cursor.y = event.clientY / sizes.height - 0.5;
-    console.log(cursor.x, cursor.y);
-})
-
+// window.addEventListener("mousemove", event => {
+    //     cursor.x = event.clientX / sizes.width - 0.5;
+    //     cursor.y = event.clientY / sizes.height - 0.5;
+    //     console.log(cursor.x, cursor.y);
+    // })
+    
 scene.add(camera);
 scene.add(box);
 
 const canvas = document.querySelector(".wbgl");
 const renderer = new THREE.WebGLRenderer({canvas});
+    
+const control = new OrbitControls(camera, canvas);
+// control.target.y = 2;
+control.enableDamping = true;
+
 
 renderer.setSize(700, 500);
 
@@ -46,12 +51,17 @@ function animate(){
     // camera.position.x = cursor.x * 7;
     // camera.position.y = -cursor.y * 7;
 
-    camera.position.x = Math.sin(cursor.x * 3) * 4;
-    camera.position.y = cursor.y * 3;
-    camera.position.z = Math.cos(cursor.x * 3) * 4;
+    // The below code is how we would make the mouse hover move the object with vanilla JS
 
-    camera.lookAt(box.position);
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 4;
+    // camera.position.y = cursor.y * 3;
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 4;
 
+    // camera.lookAt(box.position);
+
+    control.update(); 
+
+    /* what we do is that we enable the damping effect in control before the canvas initialization, but we also have to update the control in every frame so we use control.update() in animate function */
     renderer.render(scene, camera);
 }
 
