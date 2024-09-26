@@ -24,12 +24,20 @@ console.log(box);
 
 const clock = new THREE.Clock();
 
+gsap.to(box.position, {
+    x: 2,
+    duration: 1,
+    delay: 0
+})
+
 function animate(){
     window.requestAnimationFrame(animate);
     
     const getElapsedTime = clock.getElapsedTime();
-    box.position.x = Math.cos(getElapsedTime);
-    box.position.y = Math.sin(getElapsedTime);
+    camera.position.x = Math.cos(getElapsedTime);
+    camera.position.y = Math.sin(getElapsedTime);
+
+    camera.lookAt(box.position);
 
     // box.material.color.b = Math.random();
     // box.material.color.g = Math.random();
