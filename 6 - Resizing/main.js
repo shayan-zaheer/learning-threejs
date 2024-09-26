@@ -63,7 +63,7 @@ window.addEventListener("resize", event => {
 })
 
 renderer.setSize(sizes.width, sizes.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // pixel ratio is related to distortion of shapes, the smaller the number the better because high values can have lagging issues due to higher refinement of pixels
 
 const clock = new THREE.Clock();
 
