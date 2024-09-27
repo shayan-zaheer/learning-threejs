@@ -16,9 +16,47 @@ const scene = new THREE.Scene();
 
 // texture
 
-const textureLoader = new THREE.TextureLoader();
-const color = textureLoader.load("./us2.jpg")
+// loading manager
 
+const loadingManager = new THREE.LoadingManager()
+
+loadingManager.onError = () => {
+
+}
+
+loadingManager.onProgress = () => {
+
+}
+
+loadingManager.onLoad = () => {
+
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const color = textureLoader.load("./us.jpg")
+color.colorSpace = THREE.SRGBColorSpace; // gives a realistic look
+const minecraft = textureLoader.load("./minecraft.png");
+
+minecraft.colorSpace = THREE.SRGBColorSpace;
+
+minecraft.magFilter = THREE.NearestFilter;
+
+color.repeat.y = 2; // how many times we want the texture to repeat
+color.repeat.x = 2;
+
+color.wrapS = THREE.RepeatWrapping; // enables wrapping on x - axis
+color.wrapT = THREE.RepeatWrapping; // enables wrapping on y - 
+
+// color.wrapS = THREE.MirroredRepeatWrapping; // mirrors the texture on x - axis
+// color.wrapT = THREE.MirroredRepeatWrapping; // mirrors the texture on y - axis
+
+// color.offset.x = 0.5 // moves the texture away for given distance
+
+color.rotation = Math.PI / 4;
+color.center.x = 0.5; // brings the points to the center and then rotate
+color.center.y = 0.5;
+
+color.minFilter = THREE.NearestFilter; // it is used because when without using it, you zoom into the image and it becomes blurry, to fix that issue. This is used
 
 window.addEventListener("dblclick", event => {
     if(!document.fullscreenElement){
@@ -35,7 +73,7 @@ camera.position.z = 5;
 const geometry = new THREE.BoxGeometry(2, 2, 2, 2, 2, 2);
 
 const material = new THREE.MeshBasicMaterial({
-    map: color,
+    map: minecraft,
     // wireframe: true
 });
 
