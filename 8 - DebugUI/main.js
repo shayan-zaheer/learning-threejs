@@ -1,7 +1,21 @@
 import * as THREE from "three"
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import gsap from "gsap";
 import GUI from "lil-gui";
-const gui = new GUI();
+const gui = new GUI({
+    width: 300,
+    title: "DEBUGUI",
+    closeFolders: true
+});
+
+window.addEventListener("keydown", event => {
+    if(event.key === "h"){
+        gui.show(gui._hidden); // it toggles the debugui with the press of key
+    }
+})
+
+const scrollers = gui.addFolder("Folder"); // if we want to keep certain controls together
+scrollers.close(); // it will remain closed until opened
 
 const sizes = {
     width: window.innerWidth,
@@ -26,7 +40,9 @@ const guiProps = {
     color: "#ff00ff"
 }
 
-const geometry = new THREE.SphereGeometry(1, 32, 32);
+// const geometry = new THREE.SphereGeometry(1, 32, 32);
+
+const geometry = new THREE.BoxGeometry(2, 2, 2);
 
 const material = new THREE.MeshBasicMaterial({
     color: guiProps.color,
@@ -38,7 +54,7 @@ const box = new THREE.Mesh(geometry, material);
 scene.add(camera);
 scene.add(box);
 
-gui.add(box.position, "y").min(-3).max(3).name("positionY"); // in this, we have to add an object and the object's property that we want to tweak in the parameters, with min and max if we want the slider
+scrollers.add(box.position, "y").min(-3).max(3).name("positionY"); // in this, we have to add an object and the object's property that we want to tweak in the parameters, with min and max if we want the slider
 
 gui.add(material, "wireframe");
 
@@ -47,6 +63,27 @@ gui.add(material, "wireframe");
 gui.addColor(guiProps, "color").onChange(() => {
     material.color.set(guiProps.color);
 })
+
+guiProps.spin = () => {
+    gsap.to(box.rotation, {
+        y: box.rotation.y + Math.PI * 2,
+        duration: 2,
+        ease: "power1.inOut"
+    });
+}
+
+guiProps.segment = 2;
+
+scrollers.add(guiProps, "segment").onChange(() => {
+    box.geometry.dispose();
+    box.geometry = new THREE.BoxGeometry(2, 2, 2, 
+        guiProps.segment,
+        guiProps.segment,
+        guiProps.segment,
+    ).min(1).max(10).step(1);
+})
+
+gui.add(guiProps, "spin");
 
 const canvas = document.querySelector(".wbgl");
 const renderer = new THREE.WebGLRenderer({canvas});
